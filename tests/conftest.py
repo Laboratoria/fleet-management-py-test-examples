@@ -1,15 +1,10 @@
 import sys
-
-sys.path.append("..")
-
 import os
 import pytest
 import logging
 
-from models import Taxis
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from app import create_app
+from fleet_api.models import Taxis
+from fleet_api.app import create_app
 
 MOCKED_RESPONSE = [
     {"id": "7249", "plate": "CNCJ-2997"},
