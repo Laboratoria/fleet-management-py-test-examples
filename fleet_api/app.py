@@ -2,10 +2,8 @@ from flask import Flask, jsonify, request
 import os
 import sys
 from typing import Optional
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), ".")))
-from models import Taxis
-from config import Config
+from .models import Taxis
+from .config import Config
 import pdb
 
 ROWS_PER_PAGE = 20
