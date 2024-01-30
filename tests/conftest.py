@@ -1,7 +1,5 @@
-import sys
-import os
 import pytest
-import logging
+# import logging
 
 from fleet_api.models import Taxis
 from fleet_api.app import create_app
