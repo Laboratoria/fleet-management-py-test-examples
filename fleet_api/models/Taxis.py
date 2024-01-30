@@ -1,5 +1,3 @@
-import os
-import sys
 from ..database.db import get_connection
 
 class TaxiModel():

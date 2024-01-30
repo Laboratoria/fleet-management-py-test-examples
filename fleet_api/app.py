@@ -1,10 +1,8 @@
 from flask import Flask, jsonify, request
-import os
-import sys
 from typing import Optional
-from .models import Taxis
 from .config import Config
-import pdb
+from .models.Taxis import TaxiModel
+# import pdb
 
 ROWS_PER_PAGE = 20
 
@@ -20,7 +18,7 @@ def create_app(cfg: Optional[Config] = None) -> Flask:
         try:
             page = request.args.get("page", 1, type=int)
             per_page = request.args.get("per_page", ROWS_PER_PAGE, type=int)
-            taxis = Taxis.TaxiModel.get_taxis(page, per_page)
+            taxis = TaxiModel.get_taxis(page, per_page)
             response = {"taxis": taxis, "count": len(taxis)}
             return jsonify(response)
         except Exception as ex:
