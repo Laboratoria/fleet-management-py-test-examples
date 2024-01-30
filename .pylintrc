@@ -1,2 +1,5 @@
 [MAIN]
-disable=missing-docstring,missing-module-docstring,missing-class-docstring,too-few-public-methods
+disable=missing-docstring,
+missing-module-docstring,
+missing-class-docstring,
+too-few-public-methods
