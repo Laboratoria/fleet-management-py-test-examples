@@ -6,7 +6,6 @@ from .models.taxis import TaxiModel
 
 ROWS_PER_PAGE = 20
 
-
 def create_app(cfg: Optional[Config] = None) -> Flask:
     if cfg is None:
         cfg = Config()
