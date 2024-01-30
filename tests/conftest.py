@@ -35,14 +35,14 @@ def client(app):
     client = app.test_client()
     yield client
 
-
+# pytest: disable=too-few-public-methods
 class TaxiModelMock:
     # mock json() method always returns a specific testing dictionary
     @staticmethod
     def get_taxis():
         return MOCKED_RESPONSE
 
-
+# pytest: disable=too-few-public-methods
 class MockResponse:
     @staticmethod
     def json():

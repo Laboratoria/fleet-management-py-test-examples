@@ -1,8 +1,9 @@
 # pylint: disable=invalid-name
 from ..database.db import get_connection
 
-class TaxiModel():
+# https://pylint.readthedocs.io/en/stable/user_guide/messages/refactor/too-few-public-methods.html
 
+class TaxiModel():
     @classmethod
     def get_taxis(cls, page=1, per_page=10):
         offset = (page - 1) * per_page
