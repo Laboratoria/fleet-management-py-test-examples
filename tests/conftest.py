@@ -1,11 +1,13 @@
 import pytest
 # import logging
-
 from fleet_api.models.taxis import TaxiModel
 from fleet_api.app import create_app
 
 MOCKED_RESPONSE = [
-    {"id": "7249", "plate": "CNCJ-2997"},
+    {
+        "id": "7249",
+        "plate": "CNCJ-2997"
+    },
     {
         "id": "10133",
         "plate": "PAOF-6727",
