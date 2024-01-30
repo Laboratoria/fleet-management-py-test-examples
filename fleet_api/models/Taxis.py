@@ -1,3 +1,4 @@
+# pylint: disable=invalid-name
 from ..database.db import get_connection
 
 class TaxiModel():
@@ -19,4 +20,5 @@ class TaxiModel():
             connection.close()
             return taxis
         except Exception as ex:
+             # pylint: disable=raise-missing-from,broad-exception-raised
             raise Exception(ex)

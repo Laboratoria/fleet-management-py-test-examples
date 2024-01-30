@@ -1,7 +1,7 @@
 import pytest
 # import logging
 
-from fleet_api.models import Taxis
+from fleet_api.models.taxis import TaxiModel
 from fleet_api.app import create_app
 
 MOCKED_RESPONSE = [
@@ -29,6 +29,7 @@ def app():
 
 @pytest.fixture
 def client(app):
+     # pylint: disable=redefined-outer-name
     client = app.test_client()
     yield client
 
@@ -50,7 +51,8 @@ class MockResponse:
 def mock_response(monkeypatch):
     """Requests.get() mocked to return {'mock_key':'mock_response'}."""
 
+    # pylint: disable=unused-argument
     def mock_get(*args, **kwargs):
         return TaxiModelMock().get_taxis()
 
-    monkeypatch.setattr(Taxis.TaxiModel, "get_taxis", mock_get)
+    monkeypatch.setattr(TaxiModel, "get_taxis", mock_get)
