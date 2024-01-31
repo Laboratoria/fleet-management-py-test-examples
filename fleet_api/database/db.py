@@ -1,5 +1,5 @@
-from psycopg2 import DatabaseError, connect
 import os
+from psycopg2 import DatabaseError, connect
 
 def get_connection():
     try:

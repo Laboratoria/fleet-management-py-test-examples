@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os
 
+# pytest: disable=too-few-public-methods
 class Config:
     DEBUG = True
     DEVELOPMENT = True
