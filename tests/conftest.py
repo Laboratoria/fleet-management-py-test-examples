@@ -1,13 +1,11 @@
 import pytest
+
 # import logging
-from fleet_api.models.taxis import TaxiModel
 from fleet_api.app import create_app
+from fleet_api.models import taxis
 
 MOCKED_RESPONSE = [
-    {
-        "id": "7249",
-        "plate": "CNCJ-2997"
-    },
+    {"id": "7249", "plate": "CNCJ-2997"},
     {
         "id": "10133",
         "plate": "PAOF-6727",
@@ -15,6 +13,30 @@ MOCKED_RESPONSE = [
     {
         "id": "2210",
         "plate": "FGMG-3071",
+    },
+]
+
+MOCK_LOCATIONS = [
+    {
+        "id": 6418,
+        "plate": "GHGH-1458",
+        "timestamp": 1202435486,
+        "lat": 116.30509,
+        "lon": 39.96563,
+    },
+    {
+        "id": 6419,
+        "plate": "GHGH-1458",
+        "timestamp": 1202435486,
+        "lat": 116.30509,
+        "lon": 39.96563,
+    },
+    {
+        "id": 6420,
+        "plate": "GHGH-1458",
+        "timestamp": 1202435486,
+        "lat": 116.30509,
+        "lon": 39.96563,
     },
 ]
 
@@ -31,30 +53,15 @@ def app():
 
 @pytest.fixture
 def client(app):
-     # pylint: disable=redefined-outer-name
+    # pylint: disable=redefined-outer-name
     client = app.test_client()
     yield client
 
-# pytest: disable=too-few-public-methods
-class TaxiModelMock:
-    # mock json() method always returns a specific testing dictionary
-    @staticmethod
-    def get_taxis():
-        return MOCKED_RESPONSE
-
-# pytest: disable=too-few-public-methods
-class MockResponse:
-    @staticmethod
-    def json():
-        return {"mock_key": "mock_response"}
+# pylint: disable=unused-argument
+def get_mock(page=1, per_page=10):
+    return MOCKED_RESPONSE
 
 
 @pytest.fixture
 def mock_response(monkeypatch):
-    """Requests.get() mocked to return {'mock_key':'mock_response'}."""
-
-    # pylint: disable=unused-argument
-    def mock_get(*args, **kwargs):
-        return TaxiModelMock().get_taxis()
-
-    monkeypatch.setattr(TaxiModel, "get_taxis", mock_get)
+    monkeypatch.setattr(taxis, "get", get_mock)
