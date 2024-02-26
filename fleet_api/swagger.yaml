@@ -1,0 +1,18 @@
+"paths:\n  /api/taxis/:\n    get:\n      description: Get taxi list\n      responses:\n\
+    \        '200':\n          description: Returns the list of taxis\n          content:\n\
+    \            application/json:\n              schema:\n                type: object\n\
+    \                properties:\n                  taxis:\n                    type:\
+    \ array\n                    items:\n                      $ref: '#/components/schemas/TaxiModel'\n\
+    \                  count:\n                    type: integer\n  /api/locations/:\n\
+    \    get:\n      description: Get locations list\n      responses:\n        '200':\n\
+    \          description: Return locations list for a specific taxi\n          content:\n\
+    \            application/json:\n              schema:\n                type: object\n\
+    \                properties:\n                  locations:\n                 \
+    \   type: array\n                    items:\n                      $ref: '#/components/schemas/LocationsModel'\n\
+    info:\n  title: Fleet Management API\n  version: 1.0.0\nopenapi: 3.0.2\ncomponents:\n\
+    \  schemas:\n    TaxiModel:\n      properties:\n        id:\n          type: integer\n\
+    \          format: int64\n        plate:\n          type: string\n    LocationsModel:\n\
+    \      properties:\n        id:\n          type: integer\n          format: int64\n\
+    \        plate:\n          type: string\n        timestamp:\n          type: string\n\
+    \          format: date-time\n        lat:\n          type: string\n        lon:\n\
+    \          type: string\n"
