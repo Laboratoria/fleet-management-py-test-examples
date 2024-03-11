@@ -1,6 +1,5 @@
 import os
-from psycopg2 import DatabaseError, connect
-
+from psycopg2 import OperationalError, connect
 
 def get_connection():
     try:
@@ -10,5 +9,10 @@ def get_connection():
             password=os.getenv("POSTGRES_PASSWORD"),
             database=os.getenv("POSTGRES_DATABASE"),
         )
-    except DatabaseError as ex:
-        raise ex
+    except OperationalError as ex:
+        print_db_exception(ex)
+        return None
+
+def print_db_exception(ex):
+    print(f"pgcode: {ex.pgcode} pgerror: {ex.pgerror}")
+    raise ex from ex

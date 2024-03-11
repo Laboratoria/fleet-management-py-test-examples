@@ -3,44 +3,10 @@ import pytest
 # import logging
 from fleet_api.app import create_app
 from fleet_api.models import taxis
+from .mock_data import TAXIS_RESPONSE
 
-MOCKED_RESPONSE = [
-    {"id": "7249", "plate": "CNCJ-2997"},
-    {
-        "id": "10133",
-        "plate": "PAOF-6727",
-    },
-    {
-        "id": "2210",
-        "plate": "FGMG-3071",
-    },
-]
-
-MOCK_LOCATIONS = [
-    {
-        "id": 6418,
-        "plate": "GHGH-1458",
-        "timestamp": 1202435486,
-        "lat": 116.30509,
-        "lon": 39.96563,
-    },
-    {
-        "id": 6419,
-        "plate": "GHGH-1458",
-        "timestamp": 1202435486,
-        "lat": 116.30509,
-        "lon": 39.96563,
-    },
-    {
-        "id": 6420,
-        "plate": "GHGH-1458",
-        "timestamp": 1202435486,
-        "lat": 116.30509,
-        "lon": 39.96563,
-    },
-]
-
-
+# dir structure of python tests
+# https://flask.palletsprojects.com/en/3.0.x/tutorial/tests/#setup-and-fixtures
 @pytest.fixture
 def app():
     """Create application for the tests."""
@@ -50,18 +16,20 @@ def app():
     _app.testing = True
     yield _app
 
-
 @pytest.fixture
+# pylint: disable=redefined-outer-name
 def client(app):
-    # pylint: disable=redefined-outer-name
     client = app.test_client()
     yield client
 
-# pylint: disable=unused-argument
-def get_mock(page=1, per_page=10):
-    return MOCKED_RESPONSE
+# Note: because we aren't using classes, its not
+# necessary to use monkeypatch here, it could be a normal mock
+# https://docs.pytest.org/en/stable/monkeypatch.html
+# but we are using it to include an example how to use it
 
+def get_taxis(_page, _per_page):
+    return TAXIS_RESPONSE
 
 @pytest.fixture
-def mock_response(monkeypatch):
-    monkeypatch.setattr(taxis, "get", get_mock)
+def _get_mock_response(monkeypatch):
+    monkeypatch.setattr(taxis, "get", get_taxis)

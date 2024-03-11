@@ -1,10 +1,6 @@
-# pylint: disable=invalid-name
-from ..database.db import get_connection
+from ..database.db import get_connection, print_db_exception
 
-# https://pylint.readthedocs.io/en/stable/user_guide/messages/refactor/too-few-public-methods.html
-
-
-def get(page=1, per_page=10):
+def get(page, per_page):
     offset = (page - 1) * per_page
 
     try:
@@ -17,11 +13,14 @@ def get(page=1, per_page=10):
                 (per_page, offset),
             )
             resultset = cursor.fetchall()
-
             taxis = [{"id": row[0], "plate": row[1]} for row in resultset]
 
         connection.close()
         return taxis
+    # https://www.psycopg.org/docs/errors.html
+    # cual error debemos usar DataError, DatabaseError, OperationalError?
+    # pylint: disable=broad-except
     except Exception as ex:
         # pylint: disable=raise-missing-from,broad-exception-raised
-        raise Exception(ex)
+        print_db_exception(ex)
+        return None
