@@ -3,7 +3,7 @@ from psycopg2 import OperationalError, connect
 
 def get_connection():
     try:
-        print(f"HOLA MUNFO {os.getenv('POSTGRES_HOST')} {os.getenv('POSTGRES_USER')} {os.getenv('POSTGRES_PASSWORD')} {os.getenv('POSTGRES_DATABASE')}")
+        # print(f"{os.getenv('POSTGRES_HOST')} {os.getenv('POSTGRES_USER')} {os.getenv('POSTGRES_PASSWORD')} {os.getenv('POSTGRES_DATABASE')}")
         return connect(
             host=os.getenv("POSTGRES_HOST"),
             user=os.getenv("POSTGRES_USER"),
