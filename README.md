@@ -25,3 +25,10 @@ Usamos [`markers`](https://docs.pytest.org/en/stable/how-to/mark.html) para enfo
 Estamos haciendo tests de taxis endpoints y trajectories endpoint,
 primero usamos mocks y al final algunos ejemplos como usar un connecion de base de datos.
 
+## Recursos
+
+https://flask.palletsprojects.com/en/3.0.x/testing/
+https://docs.python.org/3/library/unittest.mock.html#patch
+https://realpython.com/python-mock-library/#patch-as-a-decorator
+https://flask.palletsprojects.com/en/2.3.x/config/
+https://pypi.org/project/pytest-env/
