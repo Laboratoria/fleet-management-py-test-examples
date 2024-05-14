@@ -6,6 +6,7 @@ from fleet_api.models import taxis
 from .mock_data import TAXIS_RESPONSE
 
 # dir structure of python tests
+# https://flask.palletsprojects.com/en/3.0.x/testing/
 # https://flask.palletsprojects.com/en/3.0.x/tutorial/tests/#setup-and-fixtures
 @pytest.fixture
 def app():
