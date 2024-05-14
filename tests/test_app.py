@@ -1,7 +1,7 @@
 import json
-import pytest
 from datetime import datetime
 from unittest.mock import patch
+import pytest
 from fleet_api.app import ROWS_PER_PAGE, DEFAULT_PAGE
 from .mock_data import TAXIS_RESPONSE, LOCATIONS_FOR_ID_RESPONSE
 
@@ -10,15 +10,15 @@ from .mock_data import TAXIS_RESPONSE, LOCATIONS_FOR_ID_RESPONSE
 endpoints = {
   'taxis': '/api/taxis/',
   'locations_by_taxi_id': '/api/taxis/6419/locations/',
-  'last_locations': '/api/locations/'
+  'last_locations': '/api/locations/',
+  'locations_for_8935': '/api/taxis/8935/locations/',
 }
 
-@pytest.mark.focus
 def test_get_taxis(client): # patch args are always applied in reverse order
     '''Test get taxis endpoint without explicit paging'''
     response = client.get(endpoints['taxis'])
-    data = json.loads(response.get_data(as_text=True))
-    print(f"data {data}")
+    # data = json.loads(response.get_data())
+    # print(f"data {data}")
     assert response.status == '200 OK'
 
 # https://docs.python.org/3/library/unittest.mock.html#patch
@@ -30,7 +30,7 @@ def test_get_taxis2(mock_get_taxis, client): # patch args are always applied in 
     '''Test get taxis endpoint without explicit paging'''
     response = client.get(endpoints['taxis'])
     assert response.status == '200 OK'
-    assert json.loads(response.get_data(as_text=True)) == TAXIS_RESPONSE
+    assert json.loads(response.get_data()) == TAXIS_RESPONSE
     assert mock_get_taxis.call_args.args == (DEFAULT_PAGE, ROWS_PER_PAGE)
 
 @patch('fleet_api.app.taxis.get',
@@ -81,3 +81,17 @@ def test_get_locations_by_taxi_id_invalid_date(client):
     assert response.status == '400 BAD REQUEST'
     assert 'Invalid date format' in response.json['message']
 
+@pytest.mark.focus
+# @patch('fleet_api.app.locations.get_locations_by_taxi_id',
+#     return_value=LOCATIONS_FOR_ID_RESPONSE,
+#     name='_mock_locations')
+# def test_get_locations_by_taxi_id_data(_mock_locations, client):
+def test_get_locations_by_taxi_id_data(client):
+    '''Test get locations by taxi id endpoint with paging'''
+    response = client.get(endpoints['locations_for_8935'] + '?date=2008-02-02&page=4&per_page=10')
+    data = json.loads(response.get_data())
+    # print(data[0])
+    # assert data[0]['taxi_id'] == 8935
+    # pytest.set_trace() https://docs.python.org/3/library/pdb.html#pdbcommand-help
+    taxi_ids = [traj['taxi_id'] for traj in data]
+    assert all(t_id == 8935 for t_id in taxi_ids)
