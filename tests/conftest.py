@@ -2,6 +2,7 @@ import pytest
 
 # import logging
 from fleet_api.app import create_app
+from fleet_api.config import TestConfig
 
 # dir structure of python tests
 # https://flask.palletsprojects.com/en/3.0.x/testing/
@@ -9,7 +10,8 @@ from fleet_api.app import create_app
 @pytest.fixture
 def app():
     """Create application for the tests."""
-    _app = create_app()
+    config = TestConfig()
+    _app = create_app(config)
 
     _app.config["TESTING"] = True
     _app.testing = True
