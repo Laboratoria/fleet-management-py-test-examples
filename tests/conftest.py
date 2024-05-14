@@ -22,14 +22,10 @@ def client(app):
     client = app.test_client()
     yield client
 
-# Note: because we aren't using classes, its not
-# necessary to use monkeypatch here, it could be a normal mock
-# https://docs.pytest.org/en/stable/monkeypatch.html
-# but we are using it to include an example how to use it
 
-def get_taxis(_page, _per_page):
-    return TAXIS_RESPONSE
+# def get_taxis(_page, _per_page):
+#     return TAXIS_RESPONSE
 
-@pytest.fixture
-def _get_mock_response(monkeypatch):
-    monkeypatch.setattr(taxis, "get", get_taxis)
+# @pytest.fixture
+# def _get_mock_response(monkeypatch):
+#     monkeypatch.setattr(taxis, "get", get_taxis)

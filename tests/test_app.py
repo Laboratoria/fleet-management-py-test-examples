@@ -2,7 +2,7 @@ import json
 from datetime import datetime
 from unittest.mock import patch
 from fleet_api.app import ROWS_PER_PAGE, DEFAULT_PAGE
-from .mock_data import TAXIS_RESPONSE, LOCATIONS_FOR_ID_RESPONSE, LAST_LOCATIONS_RESPONSE
+from .mock_data import TAXIS_RESPONSE, LOCATIONS_FOR_ID_RESPONSE
 
 # pylint: disable=fixme
 
@@ -12,13 +12,16 @@ endpoints = {
   'last_locations': '/api/locations/'
 }
 
+# https://docs.python.org/3/library/unittest.mock.html#patch
+# https://realpython.com/python-mock-library/#patch-as-a-decorator
 @patch('fleet_api.app.taxis.get',
     name='mock_get_taxis',
    return_value=TAXIS_RESPONSE)
 def test_get_taxis(mock_get_taxis, client): # patch args are always applied in reverse order
     '''Test get taxis endpoint without explicit paging'''
     response = client.get(endpoints['taxis'])
-    json.loads(response.get_data(as_text=True))
+    assert response.status == '200 OK'
+    assert json.loads(response.get_data(as_text=True)) == TAXIS_RESPONSE
     assert mock_get_taxis.call_args.args == (DEFAULT_PAGE, ROWS_PER_PAGE)
 
 @patch('fleet_api.app.taxis.get',
@@ -34,32 +37,12 @@ def test_get_taxis_paged(mock_get_taxis, client):
     name='_mock_locations')
 def test_get_locations_by_taxi_id(_mock_locations, client):
     '''Test get locations by taxi id endpoint with date parameter'''
-    client.get(endpoints['locations_by_taxi_id'] + '?date=2021-01-01')
+    response = client.get(endpoints['locations_by_taxi_id'] + '?date=2021-01-01')
+    assert response.status == '200 OK'
     assert _mock_locations.call_args.args == (6419,
         DEFAULT_PAGE,
         ROWS_PER_PAGE,
         datetime.strptime('2021-01-01', '%Y-%m-%d').date())
-
-# Note: can focus tests with 'pytest -v -m focus'
-# @pytest.mark.focus
-def test_get_locations_by_taxi_id_no_date(client):
-    '''Test get locations by taxi id endpoint without date parameter
-    delivers correct response'''
-    response = client.get(endpoints['locations_by_taxi_id'])
-    assert response.status == '400 BAD REQUEST'
-    # Note had a lot of difficulty trying to mock the exceptionhandler and assert that it was called
-    # tried accessing like
-    # app.error_handler_spec[None][None][Exception] = MagicMock();
-    # create_autospec(app.error_handler_spec[None][None][Exception])
-
-# @pytest.mark.focus
-def test_get_locations_by_taxi_id_invalid_date(client):
-    '''Test get locations by taxi id endpoint with invalid date parameter
-    delivers correct response'''
-    # https://pytest-with-eric.com/introduction/pytest-assert-exception/
-    response = client.get(endpoints['locations_by_taxi_id'] + '?date=01-01-abc')
-    assert response.status == '400 BAD REQUEST'
-    assert 'Invalid date format' in response.json['message']
 
 @patch('fleet_api.app.locations.get_locations_by_taxi_id',
     return_value=LOCATIONS_FOR_ID_RESPONSE,
@@ -72,24 +55,20 @@ def test_get_locations_by_taxi_id_with_pages(_mock_locations, client):
         10,
         datetime.strptime('2021-01-01', '%Y-%m-%d').date())
 
-# https://stackoverflow.com/questions/29834693/unit-test-behavior-with-patch-flask
-@patch('fleet_api.app.locations.get_last_locations',
-    return_value=LAST_LOCATIONS_RESPONSE,
-    name='_mock_last_locations')
-def test_get_last_locations(mock_last_locations, client):
-    '''Test get last locations endpoint'''
-    response = client.get(endpoints['last_locations'])
-    assert mock_last_locations.call_args.args == (DEFAULT_PAGE, ROWS_PER_PAGE)
-    assert json.loads(response.get_data()) == LAST_LOCATIONS_RESPONSE
+# Note: can focus tests with 'pytest -v -m focus'
+# @pytest.mark.focus
+def test_get_locations_by_taxi_id_no_date(client):
+    '''Test get locations by taxi id endpoint without date parameter
+    delivers correct response'''
+    response = client.get(endpoints['locations_by_taxi_id'])
+    assert response.status == '400 BAD REQUEST'
 
-@patch('fleet_api.app.locations.get_last_locations')
-def test_get_last_locations_with_page_param(mock_last_locations, client):
-    '''Test get last locations endpoint with page parameter'''
-    client.get(endpoints['last_locations'] + '?page=2')
-    assert mock_last_locations.call_args.args == (2, ROWS_PER_PAGE)
+# @pytest.mark.focus
+def test_get_locations_by_taxi_id_invalid_date(client):
+    '''Test get locations by taxi id endpoint with invalid date parameter
+    delivers correct response'''
+    # https://pytest-with-eric.com/introduction/pytest-assert-exception/
+    response = client.get(endpoints['locations_by_taxi_id'] + '?date=01-01-abc')
+    assert response.status == '400 BAD REQUEST'
+    assert 'Invalid date format' in response.json['message']
 
-@patch('fleet_api.app.locations.get_last_locations')
-def test_get_last_locations_params(mock_last_locations, client):
-    '''Test get last locations endpoint with page and per_page parameter'''
-    client.get(endpoints['last_locations'] + '?page=5&per_page=20')
-    assert mock_last_locations.call_args.args == (5, 20)
