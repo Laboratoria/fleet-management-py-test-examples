@@ -1,4 +1,5 @@
 import pytest
+import dotenv
 
 # import logging
 from fleet_api.app import create_app
@@ -10,6 +11,7 @@ from fleet_api.config import TestConfig
 @pytest.fixture
 def app():
     """Create application for the tests."""
+    dotenv.load_dotenv()
     config = TestConfig()
     _app = create_app(config)
 
