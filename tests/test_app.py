@@ -1,4 +1,5 @@
 import json
+import pytest
 from datetime import datetime
 from unittest.mock import patch
 from fleet_api.app import ROWS_PER_PAGE, DEFAULT_PAGE
@@ -12,12 +13,20 @@ endpoints = {
   'last_locations': '/api/locations/'
 }
 
+@pytest.mark.focus
+def test_get_taxis(client): # patch args are always applied in reverse order
+    '''Test get taxis endpoint without explicit paging'''
+    response = client.get(endpoints['taxis'])
+    data = json.loads(response.get_data(as_text=True))
+    print(f"data {data}")
+    assert response.status == '200 OK'
+
 # https://docs.python.org/3/library/unittest.mock.html#patch
 # https://realpython.com/python-mock-library/#patch-as-a-decorator
 @patch('fleet_api.app.taxis.get',
     name='mock_get_taxis',
    return_value=TAXIS_RESPONSE)
-def test_get_taxis(mock_get_taxis, client): # patch args are always applied in reverse order
+def test_get_taxis2(mock_get_taxis, client): # patch args are always applied in reverse order
     '''Test get taxis endpoint without explicit paging'''
     response = client.get(endpoints['taxis'])
     assert response.status == '200 OK'

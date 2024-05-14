@@ -2,8 +2,6 @@ import pytest
 
 # import logging
 from fleet_api.app import create_app
-from fleet_api.models import taxis
-from .mock_data import TAXIS_RESPONSE
 
 # dir structure of python tests
 # https://flask.palletsprojects.com/en/3.0.x/testing/
@@ -23,10 +21,3 @@ def client(app):
     client = app.test_client()
     yield client
 
-
-# def get_taxis(_page, _per_page):
-#     return TAXIS_RESPONSE
-
-# @pytest.fixture
-# def _get_mock_response(monkeypatch):
-#     monkeypatch.setattr(taxis, "get", get_taxis)
