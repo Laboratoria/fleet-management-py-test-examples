@@ -13,14 +13,17 @@ def get_locations_by_taxi_id(taxi_id, page, per_page, date=None):
             # (1, 6418, datetime.datetime(2008, 2, 2, 14, 22, 40), 116.30508, 39.96525)
             # https://stackoverflow.com/questions/18269966/determine-if-a-given-timestamp-is-within-the-same-day-in-postgresql
             cursor.execute(
-                """SELECT * FROM trajectories WHERE (date >= %s and date < %s + interval '1 day')
-                and taxi_id=%s LIMIT %s OFFSET %s""",
+                """SELECT traj.taxi_id, taxi.plate, traj.date, traj.latitude, traj.longitude
+                FROM trajectories traj
+                JOIN taxis taxi ON traj.taxi_id = taxi.id
+                WHERE (traj.date >= %s and traj.date < %s + interval '1 day') and traj.taxi_id=%s
+                LIMIT %s OFFSET %s""",
                 (date, date, taxi_id, per_page, offset),
             )
             resultset = cursor.fetchall()
             locations = [
                 {
-                    "id": row[0],
+                    "taxi_id": row[0],
                     "plate": row[1],
                     "timestamp": row[2].timestamp(),
                     "lat": row[3],
